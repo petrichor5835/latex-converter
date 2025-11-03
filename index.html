@@ -1,267 +1,230 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LaTeX 格式转换器</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', Helvetica, Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            padding: 40px;
-            max-width: 900px;
-            width: 100%;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-            font-size: 28px;
-        }
-        
-        .description {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        
-        .converter-section {
-            margin-bottom: 25px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        
-        textarea {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e1e4e8;
-            border-radius: 8px;
-            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
-            font-size: 14px;
-            resize: vertical;
-            transition: border-color 0.3s;
-            line-height: 1.6;
-        }
-        
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        #input {
-            min-height: 200px;
-        }
-        
-        #output {
-            min-height: 200px;
-            background-color: #f6f8fa;
-        }
-        
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        
-        button {
-            flex: 1;
-            min-width: 120px;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-secondary {
-            background: #f6f8fa;
-            color: #333;
-            border: 2px solid #e1e4e8;
-        }
-        
-        .btn-secondary:hover {
-            background: #e1e4e8;
-        }
-        
-        .info-box {
-            background: #f0f7ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 4px;
-        }
-        
-        .info-box h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-        
-        .info-box ul {
-            margin-left: 20px;
-            color: #555;
-            line-height: 1.8;
-        }
-        
-        .info-box code {
-            background: #fff;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Consolas', 'Monaco', monospace;
-            color: #e83e8c;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            
-            h1 {
-                font-size: 24px;
-            }
-            
-            .button-group {
-                flex-direction: column;
-            }
-            
-            button {
-                width: 100%;
-            }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0ea5e9" />
+  <title>LaTeX定界符转换器</title>
+  <style>
+    :root { --bg:#0b1020; --panel:#111833; --panel-2:#0f1530; --border:#233055; --text:#e6e9f5; --muted:#a8b3cf; --brand:#0ea5e9; --brand-2:#38bdf8; }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#0b1020,#0a0f24 60%);color:var(--text);font:15px/1.6 ui-sans-serif,-apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial}
+    a{color:var(--brand-2);text-decoration:none}
+    header{position:sticky;top:0;z-index:10;backdrop-filter:saturate(1.1) blur(6px);background:rgba(11,16,32,.7);border-bottom:1px solid var(--border)}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px}
+    .title{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .logo{width:36px;height:36px;border-radius:10px;display:grid;place-items:center;background:radial-gradient(120px 80px at 30% 20%,var(--brand-2),transparent),radial-gradient(120px 80px at 80% 60%,#5eead4,transparent),linear-gradient(180deg,#0b1020,#0b1020);box-shadow:0 0 0 1px rgba(255,255,255,.08) inset,0 8px 30px rgba(0,0,0,.35)}
+    .logo span{font-weight:800;color:#03101a;text-shadow:0 1px rgba(255,255,255,.2)}
+    h1{font-size:18px;margin:0;letter-spacing:.4px}
+    .muted{color:var(--muted);font-size:13px}
+    .grid{display:grid;gap:14px;grid-template-columns:1fr;padding:16px 18px 28px}
+    @media (min-width:900px){.grid{grid-template-columns:1fr 1fr}}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(2,10,40,.35)}
+    .card header{position:relative;background:transparent;border-bottom:1px solid var(--border)}
+    .card h2{font-size:14px;margin:0;padding:12px 14px;letter-spacing:.3px;color:#d7def6}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;padding:12px;border-bottom:1px solid var(--border)}
+    .toolbar .spacer{flex:1}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;background:#0a1a31;border:1px solid var(--border);border-radius:10px;color:var(--text);cursor:pointer;user-select:none;transition:.2s ease;font-weight:600}
+    .btn:hover{background:#0d2040;border-color:#3a4d7a}
+    textarea{width:100%;min-height:360px;resize:vertical;outline:none;border:none;background:transparent;color:var(--text);padding:14px;font:14px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}
+    .textarea-wrap{position:relative}
+    .textarea-wrap::after{content:attr(data-label);position:absolute;top:8px;right:10px;font-size:12px;color:var(--muted)}
+    .status{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+    .badge{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);padding:4px 8px;border-radius:10px;color:#c3ccef}
+    footer{border-top:1px solid var(--border)}
+    .foot{font-size:13px;color:var(--muted);padding:16px 18px 40px}
+    code{background:#0c1534;border:1px solid var(--border);padding:2px 6px;border-radius:8px}
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>📐 LaTeX 格式转换器</h1>
-        <p class="description">将 \[ \] 和 \( \) 格式的 LaTeX 公式转换为 $ $ 格式</p>
-        
-        <div class="converter-section">
-            <label for="input">输入文本（\[ \] 或 \( \) 格式）：</label>
-            <textarea id="input" placeholder="粘贴您的 LaTeX 文本...&#10;&#10;示例：&#10;行内公式：\(E = mc^2\)&#10;行间公式：&#10;\[&#10;  \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}&#10;\]"></textarea>
+  <header>
+    <div class="wrap">
+      <div class="title">
+        <div class="logo" aria-hidden="true"><span>TeX</span></div>
+        <div>
+          <h1>LaTeX 定界符转换器（固定规则·自动复制）</h1>
+          <div class="muted">规则固定：行内 \(…\) → $…$；行间 \[…\] / 裸块 [\n…\n] → $$…$$；粘贴即转换；转换后自动复制。</div>
         </div>
-        
-        <div class="button-group">
-            <button class="btn-primary" onclick="convert()">🔄 转换</button>
-            <button class="btn-secondary" onclick="copyOutput()">📋 复制结果</button>
-            <button class="btn-secondary" onclick="clearAll()">🗑️ 清空</button>
-        </div>
-        
-        <div class="converter-section">
-            <label for="output">输出结果（$ $ 格式）：</label>
-            <textarea id="output" readonly placeholder="转换结果将显示在这里..."></textarea>
-        </div>
-        
-        <div class="info-box">
-            <h3>💡 使用说明</h3>
-            <ul>
-                <li><strong>行内公式：</strong> <code>\(formula\)</code> → <code>$formula$</code></li>
-                <li><strong>行间公式：</strong> <code>\[formula\]</code> → <code>$$formula$$</code></li>
-                <li>支持批量转换，保留原文本其他内容</li>
-                <li>自动处理换行和空格</li>
-            </ul>
-        </div>
+      </div>
     </div>
+  </header>
 
-    <script>
-        function convert() {
-            const input = document.getElementById('input').value;
-            
-            // 转换行间公式 \[ ... \] 为 $$ ... $$
-            let output = input.replace(/\\\[([\\s\\S]*?)\\\]/g, (match, formula) => {
-                return '$$' + formula + '$$';
-            });
-            
-            // 转换行内公式 \( ... \) 为 $ ... $
-            output = output.replace(/\\\((.*?)\\\)/g, (match, formula) => {
-                return '$' + formula + '$';
-            });
-            
-            document.getElementById('output').value = output;
+  <div class="wrap grid">
+    <section class="card" aria-label="输入">
+      <header>
+        <h2>输入</h2>
+        <div class="toolbar">
+          <div class="muted">支持裸方括号块：首行仅含 <code>[</code>，末行仅含 <code>]</code>。</div>
+          <div class="spacer"></div>
+          <button class="btn" id="pasteBtn">粘贴</button>
+          <button class="btn" id="clearBtn">清空</button>
+        </div>
+      </header>
+      <div class="textarea-wrap" data-label="Ctrl/Cmd + Enter 转换；粘贴自动转换">
+        <textarea id="input" placeholder="在这里粘贴你的 Markdown / LaTeX 文本…"></textarea>
+      </div>
+      <div class="status" id="inStatus">
+        <span class="badge">字符数：<b id="inChars">0</b></span>
+        <span class="badge">行数：<b id="inLines">0</b></span>
+      </div>
+    </section>
+
+    <section class="card" aria-label="输出">
+      <header>
+        <h2>输出</h2>
+        <div class="toolbar">
+          <div class="muted">自动：行内→$…$；行间/裸块→$$…$$；转换后自动复制</div>
+          <div class="spacer"></div>
+          <button class="btn" id="convertBtn">转换</button>
+          <button class="btn" id="copyBtn">复制</button>
+        </div>
+      </header>
+      <div class="textarea-wrap" data-label="只读">
+        <textarea id="output" readonly placeholder="这里将显示转换后的结果…"></textarea>
+      </div>
+      <div class="status" id="outStatus">
+        <span class="badge">匹配块级 \\[…\\]：<b id="countDisplay">0</b></span>
+        <span class="badge">匹配行内 \\(…\\)：<b id="countInline">0</b></span>
+        <span class="badge">裸 [ … ] 块：<b id="countPlain">0</b></span>
+        <span class="badge">输出字符数：<b id="outChars">0</b></span>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="wrap foot">
+      <p><strong>说明：</strong> 转换顺序为：裸块 → 块级 → 行内 → 括号启发式。括号启发式只在 $/$$ 之外把“像公式”的 <code>(…)</code> 变成 <code>$…$</code>，避免误伤普通括号。</p>
+      <p>本工具纯前端、无依赖，直接放到 GitHub Pages 即可。</p>
+    </div>
+  </footer>
+
+  <script>
+  (function(){
+    var $ = function(id){ return document.getElementById(id); };
+    var els = {
+      input: $('input'), output: $('output'),
+      inChars: $('inChars'), inLines: $('inLines'), outChars: $('outChars'),
+      countDisplay: $('countDisplay'), countInline: $('countInline'), countPlain: $('countPlain'),
+      pasteBtn: $('pasteBtn'), clearBtn: $('clearBtn'), convertBtn: $('convertBtn'), copyBtn: $('copyBtn')
+    };
+
+    function looksMathy(s){
+      return /\\[A-Za-z]+|[=<>_^]|\\(?:frac|dfrac|tfrac|sin|cos|tan|ln|log|cdot|times|sum|int|lim|to|Rightarrow|left|right|boxed)/.test(s);
+    }
+
+    function convertTopLevelParens(seg){
+      var res = '', last = 0, depth = 0, start = -1, i;
+      for (i=0;i<seg.length;i++){
+        var ch = seg[i];
+        if (ch === '('){ if (depth === 0) start = i; depth++; }
+        else if (ch === ')'){
+          if (depth > 0){ depth--; if (depth === 0 && start >= 0){
+            var before = seg.slice(last, start);
+            var inner  = seg.slice(start+1, i);
+            res += before + (looksMathy(inner) ? ('$'+inner+'$') : ('('+inner+')'));
+            last = i + 1; start = -1;
+          }}
         }
-        
-        function copyOutput() {
-            const output = document.getElementById('output');
-            if (output.value.trim() === '') {
-                alert('输出为空，请先进行转换！');
-                return;
-            }
-            
-            output.select();
-            document.execCommand('copy');
-            
-            // 视觉反馈
-            const originalBg = output.style.backgroundColor;
-            output.style.backgroundColor = '#d4edda';
-            setTimeout(() => {
-                output.style.backgroundColor = originalBg;
-            }, 300);
-            
-            alert('已复制到剪贴板！');
+      }
+      res += seg.slice(last);
+      return res;
+    }
+
+    function replaceParenOutsideMath(text){
+      var out = '', i = 0, n = text.length;
+      while (i < n){
+        if (text.slice(i, i+2) === '$$'){
+          var j1 = text.indexOf('$$', i+2);
+          if (j1 === -1){ out += text.slice(i); break; }
+          out += text.slice(i, j1+2); i = j1+2; continue;
         }
-        
-        function clearAll() {
-            document.getElementById('input').value = '';
-            document.getElementById('output').value = '';
-            document.getElementById('input').focus();
+        if (text[i] === '$'){
+          var j2 = text.indexOf('$', i+1);
+          if (j2 === -1){ out += text.slice(i); break; }
+          out += text.slice(i, j2+1); i = j2+1; continue;
         }
-        
-        // 支持实时转换（可选）
-        document.getElementById('input').addEventListener('input', function() {
-            // 如果需要实时转换，取消下面这行的注释
-            // convert();
-        });
-        
-        // 支持键盘快捷键
-        document.addEventListener('keydown', function(e) {
-            // Ctrl/Cmd + Enter 执行转换
-            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                e.preventDefault();
-                convert();
-            }
-            // Ctrl/Cmd + Shift + C 复制结果
-            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
-                e.preventDefault();
-                copyOutput();
-            }
-        });
-    </script>
+        var next = text.indexOf('$', i); if (next === -1) next = n;
+        out += convertTopLevelParens(text.slice(i, next));
+        i = next;
+      }
+      return out;
+    }
+
+    function convertText(src){
+      var out = src; var cDisp = 0, cIn = 0, cPlain = 0;
+      // 裸块：[\n ... \n] 独占一行 → $$…$$
+      out = out.replace(/^\[\s*\r?\n([\s\S]*?)^\]\s*$/gm, function(_, inner){ cPlain++; return '$$'+inner+'$$'; });
+      // 标准块：\[ … \] → $$…$$
+      out = out.replace(/\\\[((?:.|\r?\n)*?)\\\]/g, function(_, inner){ cDisp++; return '$$'+inner+'$$'; });
+      // 行内：\( … \) → $…$
+      out = out.replace(/\\\(((?:.|\r?\n)*?)\\\)/g, function(_, inner){ cIn++; return '$'+inner+'$'; });
+      // 在 $/$$ 外把“像公式”的 (… ) 变为 $…$
+      out = replaceParenOutsideMath(out);
+
+      if (els.countDisplay) els.countDisplay.textContent = String(cDisp);
+      if (els.countInline)  els.countInline.textContent  = String(cIn);
+      if (els.countPlain)   els.countPlain.textContent   = String(cPlain);
+      return out;
+    }
+
+    function refresh(){
+      var src = els.input.value;
+      var out = convertText(src);
+      els.output.value = out;
+      if (els.inChars)  els.inChars.textContent = String(src.length);
+      if (els.inLines)  els.inLines.textContent = String(src.split(/\r?\n/).length);
+      if (els.outChars) els.outChars.textContent = String(out.length);
+    }
+
+    function toast(msg, warn){
+      var t = document.createElement('div'); t.textContent = msg;
+      t.style.position = 'fixed'; t.style.left = '50%'; t.style.top = '18px'; t.style.transform = 'translateX(-50%)';
+      t.style.background = warn ? '#3d2a07' : '#04283a'; t.style.color = warn ? '#ffd8a8' : '#bfe9ff';
+      t.style.border = '1px solid #233055'; t.style.padding = '8px 12px'; t.style.borderRadius = '10px'; t.style.zIndex = '50';
+      t.style.boxShadow = '0 10px 30px rgba(0,0,0,.4)'; t.style.fontWeight = '600';
+      document.body.appendChild(t); setTimeout(function(){ t.remove(); }, 1800);
+    }
+
+    // 交互：转换按钮 → 转换并复制
+    if (els.convertBtn) els.convertBtn.addEventListener('click', function(){
+      refresh();
+      try { navigator.clipboard.writeText(els.output.value).then(function(){ toast('已转换并复制到剪贴板'); }); }
+      catch (e) { toast('已转换，但复制失败：浏览器未授权', true); }
+    });
+
+    // 复制按钮
+    if (els.copyBtn) els.copyBtn.addEventListener('click', function(){
+      try { navigator.clipboard.writeText(els.output.value).then(function(){ toast('已复制到剪贴板'); }); }
+      catch (e) { toast('复制失败：浏览器未授权', true); }
+    });
+
+    // 粘贴按钮：读取→转换→复制
+    if (els.pasteBtn) els.pasteBtn.addEventListener('click', function(){
+      if (!navigator.clipboard || !navigator.clipboard.readText){ toast('浏览器未授权读取剪贴板，直接在左侧 Ctrl/Cmd+V 也会自动转换', true); return; }
+      navigator.clipboard.readText().then(function(txt){
+        els.input.value = txt; refresh();
+        try { navigator.clipboard.writeText(els.output.value).then(function(){ toast('已粘贴并复制转换结果'); }); } catch (e) {}
+      }).catch(function(){ toast('无法读取剪贴板内容', true); });
+    });
+
+    // 输入框：粘贴后自动转换并尝试复制结果
+    if (els.input) els.input.addEventListener('paste', function(){
+      setTimeout(function(){
+        refresh();
+        try { navigator.clipboard.writeText(els.output.value); } catch (e) {}
+      }, 0);
+    });
+
+    // 清空
+    if (els.clearBtn) els.clearBtn.addEventListener('click', function(){ els.input.value = ''; refresh(); });
+
+    // 快捷键：Ctrl/Cmd + Enter 转换
+    document.addEventListener('keydown', function(e){ if ((e.ctrlKey || e.metaKey) && (e.key || '').toLowerCase() === 'enter'){ e.preventDefault(); if (els.convertBtn) els.convertBtn.click(); }});
+
+    // 首次渲染
+    refresh();
+  })();
+  </script>
 </body>
 </html>
