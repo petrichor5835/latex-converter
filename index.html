@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaTeX 格式转换器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans SC', Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .description {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .converter-section {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e4e8;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s;
+            line-height: 1.6;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        #input {
+            min-height: 200px;
+        }
+        
+        #output {
+            min-height: 200px;
+            background-color: #f6f8fa;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #f6f8fa;
+            color: #333;
+            border: 2px solid #e1e4e8;
+        }
+        
+        .btn-secondary:hover {
+            background: #e1e4e8;
+        }
+        
+        .info-box {
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 4px;
+        }
+        
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+        
+        .info-box code {
+            background: #fff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            color: #e83e8c;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📐 LaTeX 格式转换器</h1>
+        <p class="description">将 \[ \] 和 \( \) 格式的 LaTeX 公式转换为 $ $ 格式</p>
+        
+        <div class="converter-section">
+            <label for="input">输入文本（\[ \] 或 \( \) 格式）：</label>
+            <textarea id="input" placeholder="粘贴您的 LaTeX 文本...&#10;&#10;示例：&#10;行内公式：\(E = mc^2\)&#10;行间公式：&#10;\[&#10;  \int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}&#10;\]"></textarea>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-primary" onclick="convert()">🔄 转换</button>
+            <button class="btn-secondary" onclick="copyOutput()">📋 复制结果</button>
+            <button class="btn-secondary" onclick="clearAll()">🗑️ 清空</button>
+        </div>
+        
+        <div class="converter-section">
+            <label for="output">输出结果（$ $ 格式）：</label>
+            <textarea id="output" readonly placeholder="转换结果将显示在这里..."></textarea>
+        </div>
+        
+        <div class="info-box">
+            <h3>💡 使用说明</h3>
+            <ul>
+                <li><strong>行内公式：</strong> <code>\(formula\)</code> → <code>$formula$</code></li>
+                <li><strong>行间公式：</strong> <code>\[formula\]</code> → <code>$$formula$$</code></li>
+                <li>支持批量转换，保留原文本其他内容</li>
+                <li>自动处理换行和空格</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function convert() {
+            const input = document.getElementById('input').value;
+            
+            // 转换行间公式 \[ ... \] 为 $$ ... $$
+            let output = input.replace(/\\\[([\\s\\S]*?)\\\]/g, (match, formula) => {
+                return '$$' + formula + '$$';
+            });
+            
+            // 转换行内公式 \( ... \) 为 $ ... $
+            output = output.replace(/\\\((.*?)\\\)/g, (match, formula) => {
+                return '$' + formula + '$';
+            });
+            
+            document.getElementById('output').value = output;
+        }
+        
+        function copyOutput() {
+            const output = document.getElementById('output');
+            if (output.value.trim() === '') {
+                alert('输出为空，请先进行转换！');
+                return;
+            }
+            
+            output.select();
+            document.execCommand('copy');
+            
+            // 视觉反馈
+            const originalBg = output.style.backgroundColor;
+            output.style.backgroundColor = '#d4edda';
+            setTimeout(() => {
+                output.style.backgroundColor = originalBg;
+            }, 300);
+            
+            alert('已复制到剪贴板！');
+        }
+        
+        function clearAll() {
+            document.getElementById('input').value = '';
+            document.getElementById('output').value = '';
+            document.getElementById('input').focus();
+        }
+        
+        // 支持实时转换（可选）
+        document.getElementById('input').addEventListener('input', function() {
+            // 如果需要实时转换，取消下面这行的注释
+            // convert();
+        });
+        
+        // 支持键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + Enter 执行转换
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                convert();
+            }
+            // Ctrl/Cmd + Shift + C 复制结果
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
+                e.preventDefault();
+                copyOutput();
+            }
+        });
+    </script>
+</body>
+</html>
