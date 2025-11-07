@@ -152,9 +152,9 @@
     }
 
     function removeCommasBeforeDifferentials(text){
-      // Remove commas before differential operators like dx, dy, dt, dz, du, dv, dw, ds, dr, dtheta, dphi, etc.
-      // This pattern matches: comma + optional whitespace + 'd' + 1-5 letters + word boundary
-      return text.replace(/,(\s*d[a-z]{1,5}\b)/gi, function(_, differential){ return ' ' + differential; });
+      // Remove commas before common differential operators: dx, dy, dz, dt, dr, ds, du, dv, dw, dtheta, dphi, drho, domega, etc.
+      // This pattern specifically matches known differential operators to avoid false positives
+      return text.replace(/,(\s*d(?:[xyztrsuvabc]|theta|phi|rho|omega|alpha|beta|gamma|delta|epsilon|sigma|tau)\b)/gi, function(_, differential){ return ' ' + differential; });
     }
 
     function convertText(src){
