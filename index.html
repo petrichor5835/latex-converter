@@ -151,6 +151,12 @@
       return out;
     }
 
+    function removeCommasBeforeDifferentials(text){
+      // Remove commas before differential operators like dx, dy, dt, dz, du, dv, dw, ds, dr, dtheta, etc.
+      // This pattern matches: comma + optional whitespace + 'd' + one or more letters
+      return text.replace(/,(\s*d[a-z]+)/gi, function(_, differential){ return ' ' + differential; });
+    }
+
     function convertText(src){
       var out = src; var cDisp = 0, cIn = 0, cPlain = 0;
       // 裸块：[\n ... \n] 独占一行 → $$…$$
@@ -161,6 +167,8 @@
       out = out.replace(/\\\(((?:.|\r?\n)*?)\\\)/g, function(_, inner){ cIn++; return '$'+inner+'$'; });
       // 在 $/$$ 外把“像公式”的 (… ) 变为 $…$
       out = replaceParenOutsideMath(out);
+      // 移除积分中的逗号（如 ,dx → dx）
+      out = removeCommasBeforeDifferentials(out);
 
       if (els.countDisplay) els.countDisplay.textContent = String(cDisp);
       if (els.countInline)  els.countInline.textContent  = String(cIn);
