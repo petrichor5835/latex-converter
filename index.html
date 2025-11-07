@@ -151,6 +151,13 @@
       return out;
     }
 
+    function removeCommasBeforeDifferentials(text){
+      // Remove commas before common differential operators: dx, dy, dz, dt, dr, ds, du, dv, dw, dtheta, dphi, drho, domega, etc.
+      // This pattern specifically matches known differential operators to avoid false positives
+      // Character class [xyztrsuvabc] covers: x,y,z (coordinates), t (time), r (radius), s (arc length), u,v,w (parameters), a,b,c (general)
+      return text.replace(/,(\s*d(?:[xyztrsuvabc]|theta|phi|rho|omega|alpha|beta|gamma|delta|epsilon|sigma|tau)\b)/gi, function(_, differential){ return ' ' + differential; });
+    }
+
     function convertText(src){
       var out = src; var cDisp = 0, cIn = 0, cPlain = 0;
       // 裸块：[\n ... \n] 独占一行 → $$…$$
@@ -161,6 +168,8 @@
       out = out.replace(/\\\(((?:.|\r?\n)*?)\\\)/g, function(_, inner){ cIn++; return '$'+inner+'$'; });
       // 在 $/$$ 外把“像公式”的 (… ) 变为 $…$
       out = replaceParenOutsideMath(out);
+      // 移除积分中的逗号（如 ,dx → dx）
+      out = removeCommasBeforeDifferentials(out);
 
       if (els.countDisplay) els.countDisplay.textContent = String(cDisp);
       if (els.countInline)  els.countInline.textContent  = String(cIn);
